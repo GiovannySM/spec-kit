@@ -4,8 +4,7 @@ extension:
   id: devops
   name: "Azure DevOps Integration"
   version: "1.1.0"
-  description: "Ensure project root Feature, create User Story per spec (child of root Feature, linked to git feature branch) and Task per tasks.md item (child of the User Story) in Azure DevOps"
-  description: "Create Features, User Stories, and Tasks in Azure DevOps from Spec Kit artifacts (spec.md, plan.md, tasks.md)"
+  description: "Create Features, User Stories, and Tasks in Azure DevOps from Spec Kit artifacts (spec.md, plan.md, tasks.md). Ships helper scripts/python/ado.py for direct REST access"
   author: spec-kit-core
   repository: https://github.com/github/spec-kit
   license: MIT

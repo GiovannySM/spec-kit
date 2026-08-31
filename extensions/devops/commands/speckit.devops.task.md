@@ -57,10 +57,10 @@ Extrae cada task de `tasks.md` en orden:
 
 Para CADA task de tasks.md, crea un work item con parent = `ado_user_story_id`:
 
-### Método 1 — Helper del proyecto (preferido)
+### Método 1 — Helper de la extensión (preferido)
 
 ```python
-python .tmp/ado.py create-wi '{"type":"Task","title":"<TITULO>","description":"<DESC_HTML>","value_area":"BackEnd","tags":["backend","identity","branch:feature/001-slug"],"parent_id":<US_ID>}' 
+python .specify/extensions/devops/scripts/python/ado.py create-wi '{"type":"Task","title":"<TITULO>","description":"<DESC_HTML>","value_area":"BackEnd","tags":["backend","identity","branch:feature/001-slug"],"parent_id":<US_ID>}' 
 ```
 
 *(repite por task; el helper añade la relación padre automaticamente)*
