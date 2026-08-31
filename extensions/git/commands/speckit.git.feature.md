@@ -1,10 +1,10 @@
 ---
-description: "Create a feature branch with sequential or timestamp numbering"
+description: "Create a GitFlow branch (feature/, hotfix/, or release/) with sequential or timestamp numbering"
 ---
 
-# Create Feature Branch
+# Create GitFlow Branch
 
-Create and switch to a new git feature branch for the given specification. This command handles **branch creation only** — the spec directory and files are created by the core `__SPECKIT_COMMAND_SPECIFY__` workflow.
+Create and switch to a new GitFlow branch (`feature/`, `hotfix/`, or `release/`) for the given specification. This command handles **branch creation only** — the spec directory and files are created by the core `__SPECKIT_COMMAND_SPECIFY__` workflow.
 
 ## User Input
 
@@ -25,6 +25,54 @@ If the user explicitly provided `GIT_BRANCH_NAME` (e.g., via environment variabl
 
 - Verify Git is available by running `git rev-parse --is-inside-work-tree 2>/dev/null`
 - If Git is not available, warn the user and skip branch creation
+
+## GitFlow Branch Type
+
+Determine the GitFlow branch type (`GITFLOW_TYPE`) from the user input **before** any validation:
+
+- If the input starts with or contains the keyword `hotfix` (e.g., `hotfix: fix login crash`, `hotfix fix critical bug`) → `GITFLOW_TYPE=hotfix`
+- If the input starts with or contains the keyword `release` (e.g., `release: 1.2.0`, `release 2.0`) → `GITFLOW_TYPE=release`
+- Otherwise → `GITFLOW_TYPE=feature` (default)
+
+Strip the type keyword and any trailing colon/space from the input to get the clean feature description used for branch name generation.
+
+## GitFlow Branch Validation
+
+Before creating the branch, validate the current base branch against the GitFlow conventions for `GITFLOW_TYPE`:
+
+1. Run `git rev-parse --abbrev-ref HEAD` to get the current branch name (`CURRENT_BRANCH`).
+2. Apply the validation rule for the detected type:
+
+| `GITFLOW_TYPE` | Valid base branch | Action if invalid |
+|---|---|---|
+| `feature` | `develop` | ⚠️ Warn + confirm |
+| `release` | `develop` | ⚠️ Warn + confirm |
+| `hotfix` | `main` or `master` | ⚠️ Warn + confirm |
+
+3. If the current branch matches the valid base, proceed directly without any prompt.
+4. If the current branch does **not** match, display the appropriate warning:
+
+**For `feature` or `release` branches (base should be `develop`):**
+```
+⚠️  GitFlow Warning: Current branch '{CURRENT_BRANCH}' is not 'develop'.
+GitFlow convention requires '{GITFLOW_TYPE}/*' branches to be created from 'develop'.
+  Expected:  git checkout develop
+  Then:      /speckit.git.feature {GITFLOW_TYPE}: <description>
+
+Type 'yes' to create the branch from '{CURRENT_BRANCH}' anyway, or switch to 'develop' first.
+```
+
+**For `hotfix` branches (base should be `main` or `master`):**
+```
+⚠️  GitFlow Warning: Current branch '{CURRENT_BRANCH}' is not 'main' or 'master'.
+GitFlow convention requires 'hotfix/*' branches to be created from 'main' or 'master'.
+  Expected:  git checkout main
+  Then:      /speckit.git.feature hotfix: <description>
+
+Type 'yes' to create the branch from '{CURRENT_BRANCH}' anyway, or switch to 'main'/'master' first.
+```
+
+5. If the user confirms (`yes`), proceed with branch creation from the current branch.
 
 ## Branch Numbering Mode
 
@@ -69,6 +117,17 @@ Run the appropriate script based on your platform:
 - The JSON output will contain `BRANCH_NAME` and `FEATURE_NUM`
 - Do not manually expand `branch_template`; the script reads the git extension config and applies it consistently
 
+## GitFlow Prefix Application
+
+After the script runs and outputs `BRANCH_NAME` (e.g., `003-add-user-auth`), apply the GitFlow prefix:
+
+1. Rename the branch to include the correct prefix:
+   ```
+   git branch -m {BRANCH_NAME} {GITFLOW_TYPE}/{BRANCH_NAME}
+   ```
+2. Store the full name as `FULL_BRANCH_NAME={GITFLOW_TYPE}/{BRANCH_NAME}` (e.g., `feature/003-add-user-auth`, `hotfix/003-fix-login-crash`, `release/003-v1-2-0`).
+3. Use `FULL_BRANCH_NAME` in all subsequent references and output messages.
+
 ## Graceful Degradation
 
 If Git is not installed or the current directory is not a Git repository:
@@ -78,5 +137,10 @@ If Git is not installed or the current directory is not a Git repository:
 ## Output
 
 The script outputs JSON with:
-- `BRANCH_NAME`: The branch name (e.g., `003-user-auth`, `20260319-143022-user-auth`, or `jdoe/web/003-user-auth`)
+- `BRANCH_NAME`: The raw branch name without GitFlow prefix (e.g., `003-user-auth`, `20260319-143022-user-auth`, or `jdoe/web/003-user-auth`)
 - `FEATURE_NUM`: The numeric or timestamp prefix used
+
+After the GitFlow prefix is applied, the final branch name (`FULL_BRANCH_NAME`) will be:
+- `feature/003-user-auth` — for new features
+- `hotfix/003-fix-login-crash` — for urgent bug fixes from `main`/`master`
+- `release/003-v1-2-0` — for release preparation from `develop`

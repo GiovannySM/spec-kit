@@ -274,6 +274,22 @@ Additional commands for enhanced quality and validation:
 | `/speckit.analyze`   | `speckit-analyze`      | Cross-artifact consistency & coverage analysis (run after `/speckit.tasks`, before `/speckit.implement`)                             |
 | `/speckit.checklist` | `speckit-checklist`    | Generate custom quality checklists that validate requirements completeness, clarity, and consistency (like "unit tests for English") |
 
+#### Azure DevOps Integration Commands
+
+Optional commands for creating work items in Azure DevOps (requires the `devops` extension):
+
+| Command                        | Agent Skill                  | Description                                                                                               |
+| ------------------------------ | ---------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `/speckit.devops.feature`      | `speckit-devops-feature`     | Create a Feature work item in Azure DevOps from `spec.md` (recommended before `/speckit.spec`)            |
+| `/speckit.devops.user-story`   | `speckit-devops-user-story`  | Create User Story work items in Azure DevOps from `spec.md` and `plan.md` (recommended before `/speckit.plan`) |
+| `/speckit.devops.task`         | `speckit-devops-task`        | Create Task work items in Azure DevOps from `tasks.md` (recommended before `/speckit.implement`)          |
+
+Install the extension with:
+
+```bash
+specify extension add devops
+```
+
 ## 🔧 Specify CLI Reference
 
 For full command details, options, and examples, see the [CLI Reference](https://github.github.io/spec-kit/reference/overview.html).

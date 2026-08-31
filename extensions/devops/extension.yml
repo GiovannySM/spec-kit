@@ -1,0 +1,50 @@
+schema_version: "1.0"
+
+extension:
+  id: devops
+  name: "Azure DevOps Integration"
+  version: "1.1.0"
+  description: "Ensure project root Feature, create User Story per spec (child of root Feature, linked to git feature branch) and Task per tasks.md item (child of the User Story) in Azure DevOps"
+  description: "Create Features, User Stories, and Tasks in Azure DevOps from Spec Kit artifacts (spec.md, plan.md, tasks.md)"
+  author: spec-kit-core
+  repository: https://github.com/github/spec-kit
+  license: MIT
+
+requires:
+  speckit_version: ">=0.2.0"
+  tools:
+    - name: git
+      required: true
+      description: "Required to detect Azure DevOps remote URL and current branch"
+
+provides:
+  commands:
+    - name: speckit.devops.feature
+      file: commands/speckit.devops.feature.md
+      description: "Ensure the project-level root Feature work item (idempotent; one per project)"
+    - name: speckit.devops.user-story
+      file: commands/speckit.devops.user-story.md
+      description: "Create ONE User Story work item for the current spec, child of the root Feature, linked to the git feature branch"
+    - name: speckit.devops.task
+      file: commands/speckit.devops.task.md
+      description: "Create Task work items from tasks.md, children of the spec's User Story"
+
+hooks:
+  after_constitution:
+    command: speckit.devops.feature
+    optional: false
+    description: "Ensure the root Feature work item after constitution (idempotent; one per project)"
+  after_specify:
+    command: speckit.devops.user-story
+    optional: false
+    description: "Create the User Story for this spec (child of root Feature) and link the git feature branch"
+  after_tasks:
+    command: speckit.devops.task
+    optional: false
+    description: "Create Task work items from tasks.md as children of the User Story"
+
+tags:
+  - azure-devops
+  - work-items
+  - project-management
+  - integration

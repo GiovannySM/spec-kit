@@ -1,6 +1,14 @@
 # Git Branching Workflow Extension Configuration
 # Copied to .specify/extensions/git/git-config.yml on install
 
+# Git flow: base branch from which feature branches are created (e.g. develop).
+# Leave empty to branch from the current HEAD.
+base_branch: ""
+
+# Optional namespace for feature branches.
+# Example: "feature" expands branches to "feature/{number}-{slug}"
+branch_prefix: ""
+
 # Branch numbering strategy: "sequential" (001, 002, ...) or "timestamp" (YYYYMMDD-HHMMSS)
 branch_numbering: sequential
 

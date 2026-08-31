@@ -275,6 +275,22 @@ Report completion to the user with:
 - Checklist results summary
 - Readiness for the next phase (`__SPECKIT_COMMAND_CLARIFY__` or `__SPECKIT_COMMAND_PLAN__`)
 
+Also include a **Next Steps** section. Build it dynamically — only include an item if its condition is met:
+
+- **Git branch** — include only if **both** conditions are true:
+  1. `.specify/extensions/git/` exists (git extension is installed)
+  2. `BRANCH_NAME` was **not** set by the `before_specify` hook (branch was not auto-created)
+
+  → Suggest: `__SPECKIT_COMMAND_GIT_FEATURE__` — create a GitFlow feature branch
+
+- **Azure DevOps Feature** — include only if `.specify/extensions/devops/` exists (devops extension is installed):
+
+  → Suggest: `__SPECKIT_COMMAND_DEVOPS_FEATURE__` — create the Feature work item in Azure DevOps from `spec.md`
+
+- **Always include**: suggest `__SPECKIT_COMMAND_CLARIFY__` to resolve ambiguities before planning, or `__SPECKIT_COMMAND_PLAN__` to proceed directly to technical planning
+
+Omit entirely any item whose condition is false. Format as a numbered list (renumbered after omissions) with the command in backticks and a one-line description.
+
 **NOTE:** Branch creation is handled by the `before_specify` hook (git extension). Spec directory and file creation are always handled by this core command.
 
 ## Quick Guidelines
