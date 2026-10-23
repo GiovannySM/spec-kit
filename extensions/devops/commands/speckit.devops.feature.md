@@ -75,12 +75,12 @@ Config: .specify/extensions/devops/local-config.yml
 
 > [!NOTE]
 > `az boards work-item create` falla con `Value Area` en este proceso; usa REST
-> JSON-Patch directo, o el helper `.tmp/ado.py` si existe.
+> JSON-Patch directo, o el helper `scripts/python/ado.py` de esta extensión.
 
-### Método 1 — Helper del proyecto (preferido)
+### Método 1 — Helper de la extensión (preferido)
 
 ```python
-python .tmp/ado.py create-wi '{"type":"Feature","title":"<TITULO>","description":"<DESC_HTML>","value_area":"<VA>","tags":["backend","identity"],"acceptance_criteria":"<AC opcional>"}'
+python .specify/extensions/devops/scripts/python/ado.py create-wi '{"type":"Feature","title":"<TITULO>","description":"<DESC_HTML>","value_area":"<VA>","tags":["backend","identity"],"acceptance_criteria":"<AC opcional>"}'
 ```
 
 ### Method 2 — REST directo

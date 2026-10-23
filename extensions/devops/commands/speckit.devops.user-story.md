@@ -84,14 +84,14 @@ Parent Feature: #{ado_feature_id}
 > [!CAUTION]
 > NUNCA crear work items fuera del org/proyecto del remote detectado.
 
-### Método 1 — Helper del proyecto (preferido)
+### Método 1 — Helper de la extensión (preferido)
 
 ```python
-python .tmp/ado.py create-wi '{"type":"User Story","title":"<TITULO>","description":"<DESC_HTML>","value_area":"BackEnd","tags":["backend","identity","branch:feature/001-slug"],"acceptance_criteria":"<AC_HTML>","priority":2,"parent_id":<FEATURE_ID>}'
+python .specify/extensions/devops/scripts/python/ado.py create-wi '{"type":"User Story","title":"<TITULO>","description":"<DESC_HTML>","value_area":"BackEnd","tags":["backend","identity","branch:feature/001-slug"],"acceptance_criteria":"<AC_HTML>","priority":2,"parent_id":<FEATURE_ID>}'
 ```
 
-El helper resuelve token az, JSON-Patch, añade la relación padre (Hierarchy-Reverse)
-y valida el picklist Value Area.
+El helper resuelve token az, JSON-Patch, detecta org/proyecto desde el remote de git,
+ añade la relación padre (Hierarchy-Reverse) y valida el picklist Value Area.
 
 ### Método 2 — REST directo
 
@@ -117,8 +117,8 @@ Notas técnicas (errores conocidos):
 
 ## Step 7 — Comentario de trazabilidad en el work item
 
-Añade comentario con la branch y referencias (el helper `.tmp/ado.py` lo hace
-explícito solo si se implementa; si no, REST `POST /_apis/wit/workitems/{id}/comments?api-version=7.1-preview.3`):
+Añade comentario con la branch y referencias (el helper `scripts/python/ado.py`
+lo hace explícito solo si se implementa; si no, REST `POST /_apis/wit/workitems/{id}/comments?api-version=7.1-preview.3`):
 
 ```
 🌿 Git branch: {BRANCH}
